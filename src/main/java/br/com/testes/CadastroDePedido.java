@@ -1,40 +1,41 @@
 package br.com.testes;
 
 import br.com.dao.CategoriaDAO;
+import br.com.dao.ClienteDAO;
+import br.com.dao.PedidoDAO;
 import br.com.dao.ProdutoDAO;
-import br.com.modelo.Categoria;
-import br.com.modelo.Produto;
+import br.com.modelo.*;
 import br.com.util.JPAUtil;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
-import java.util.List;
 
-public class CadastroDeProduto {
+public class CadastroDePedido {
 
     public static void main(String[] args) {
-        cadastrarProduto();
+        popularBancoDedados();
 
         EntityManager entityManager = JPAUtil.getEntityManager();
 
         ProdutoDAO produtoDAO = new ProdutoDAO(entityManager);
-        Produto p = produtoDAO.buscarPorId(1l);
-       // System.out.println(p.getNome());
+        Produto produto = produtoDAO.buscarPorId(1l);
 
-       // List<Produto> todos = produtoDAO.buscarTodos();
-        //todos.forEach(p2 -> System.out.println(p.getNome()));
+        ClienteDAO clienteDAO = new ClienteDAO(entityManager);
+        Cliente cliente = clienteDAO.buscarPorId(1l);
 
-        List<Produto> porNome = produtoDAO.buscarPorNome("Xiomi");
-        porNome.forEach(p2 -> System.out.println(p.getNome()));
+        entityManager.getTransaction().begin();
 
-        List<Produto> porNomeDaCategoria = produtoDAO.buscarPorNomeDaCategoria("CELULARES");
-        porNomeDaCategoria.forEach(p2 -> System.out.println(p.getNome()));
+        Pedido pedido = new Pedido(cliente);
+        pedido.adicionarItem(new ItemPedido(10,pedido, produto));
 
-        BigDecimal precoDoProduto = produtoDAO.buscarPrecoDoProdutoComNome("Xiomi REdmi");
-        System.out.println("Preço do Produto: "+precoDoProduto);
+        PedidoDAO pedidoDAO = new PedidoDAO(entityManager);
+        pedidoDAO.cadastrar(pedido);
+
+        entityManager.getTransaction().commit();
+
     }
 
-    private static void cadastrarProduto() {
+    private static void popularBancoDedados() {
         Categoria celulares = new Categoria("CELULARES");
 
         Produto celular = new Produto("Xiomi REdmi","Muito bom",new BigDecimal("1000"), celulares);
@@ -43,8 +44,12 @@ public class CadastroDeProduto {
 
         ProdutoDAO produtoDAO = new ProdutoDAO(entityManager);
         CategoriaDAO categoriaDAO = new CategoriaDAO(entityManager);
+        Cliente cliente = new Cliente("Augusto", "123456");
+        ClienteDAO clienteDAO = new ClienteDAO(entityManager);
+
 
         entityManager.getTransaction().begin(); //Iniciando a transação
+        clienteDAO.cadastrar(cliente);
         categoriaDAO.cadastrar(celulares);
         produtoDAO.cadastrar(celular);
         entityManager.getTransaction().commit(); // enviando a operação

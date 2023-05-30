@@ -1,7 +1,6 @@
 package br.com.dao;
 
 import br.com.modelo.Categoria;
-import br.com.modelo.Produto;
 
 import javax.persistence.EntityManager;
 
