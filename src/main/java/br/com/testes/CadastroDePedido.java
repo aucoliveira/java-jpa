@@ -9,6 +9,8 @@ import br.com.util.JPAUtil;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 
 public class CadastroDePedido {
 
@@ -32,6 +34,16 @@ public class CadastroDePedido {
         pedidoDAO.cadastrar(pedido);
 
         entityManager.getTransaction().commit();
+
+        BigDecimal totalVendido = pedidoDAO.valorTotalVendido();
+        System.out.println("O valor Total vendido é: "+totalVendido);
+
+        List<Object[]> relatorio = pedidoDAO.relatorioDeVendas();
+        for (Object[] obj: relatorio) {
+            System.out.println(obj[0]);
+            System.out.println(obj[1]);
+            System.out.println(obj[2]);
+        }
 
     }
 
