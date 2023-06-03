@@ -3,6 +3,7 @@ package br.com.testes;
 import br.com.dao.CategoriaDAO;
 import br.com.dao.ProdutoDAO;
 import br.com.modelo.Categoria;
+import br.com.modelo.CategoriaId;
 import br.com.modelo.Produto;
 import br.com.util.JPAUtil;
 
@@ -48,6 +49,9 @@ public class CadastroDeProduto {
         categoriaDAO.cadastrar(celulares);
         produtoDAO.cadastrar(celular);
         entityManager.getTransaction().commit(); // enviando a operação
+
+        entityManager.find(Categoria.class, new CategoriaId("CELULARES", "XPTO"));
+
         entityManager.close(); // fechando
     }
 }

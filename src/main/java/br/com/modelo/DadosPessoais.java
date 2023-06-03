@@ -1,9 +1,10 @@
 package br.com.modelo;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
-public class DadosPessoais {
+public class DadosPessoais implements Serializable {
 
     private String nome;
     private String cpf;
